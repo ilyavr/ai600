@@ -1,0 +1,7 @@
+# .dockerignore
+models/
+weights/
+*.pt
+*.onnx
+*.pth
+runs/

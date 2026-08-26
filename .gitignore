@@ -1,0 +1,6 @@
+*.tar
+data/
+*.docx
+*.pt
+*.txt
+*.json

@@ -1,0 +1,232 @@
+<mxfile host="app.diagrams.net" modified="2023-10-27T00:00:00.000Z" agent="5.0" version="21.0.0" type="device">
+  <diagram id="flow" name="Логика программы">
+    <mxGraphModel dx="1200" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1200" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- СТАРТ -->
+        <mxCell id="2" value="СТАРТ" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="210" y="20" width="120" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- ИНИЦИАЛИЗАЦИЯ -->
+        <mxCell id="3" value="&lt;b&gt;ИНИЦИАЛИЗАЦИЯ:&lt;/b&gt;&lt;br&gt;1. Конфиг, Логгер, Папки&lt;br&gt;2. PaddleOCR (thread-local)&lt;br&gt;3. Камера Hikrobot (software trigger)&lt;br&gt;4. Telnet Сканер (Поток 1)&lt;br&gt;5. Modbus Обновление слов (Поток 2)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="90" width="340" height="120" as="geometry" />
+        </mxCell>
+        
+        <!-- ОЖИДАНИЕ ШК -->
+        <mxCell id="4" value="Ожидание ШК&lt;br&gt;(barcode_queue.get)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="250" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- ПРОВЕРКА НЕЗАВЕРШЕННОЙ СЕССИИ -->
+        <mxCell id="5" value="Есть незавершенная&lt;br&gt;сессия и буфер кадров?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="185" y="340" width="170" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- СОХРАНЕНИЕ ERROR VIDEO -->
+        <mxCell id="6" value="Сохранить error_video&lt;br&gt;Очистить буфер" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="500" y="355" width="200" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- НОВЫЙ ШК? -->
+        <mxCell id="7" value="Это новый ШК&lt;br&gt;(отличается от prev)?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="180" y="470" width="180" height="90" as="geometry" />
+        </mxCell>
+        
+        <!-- НАСТРОЙКА НОВОЙ СЕССИИ -->
+        <mxCell id="8" value="Логирование TBB&lt;br&gt;Запуск потока камеры (t_cap)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="490" y="485" width="220" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- ПОТОК КАМЕРЫ -->
+        <mxCell id="9" value="&lt;b&gt;Поток камеры:&lt;/b&gt; Ждет движение конвейера (Modbus), делает фото, кладет в frame_queue" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;fillColor=#e1d5e7;strokeColor=#9673a6;size=20;" vertex="1" parent="1">
+          <mxGeometry x="100" y="610" width="340" height="60" as="geometry" />
+        </mxCell>
+        
+        <!-- ПОЛУЧИТЬ КАДР -->
+        <mxCell id="10" value="Получить кадр из очереди&lt;br&gt;(timeout 0.5s)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="200" y="710" width="140" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- КАДР ПОЛУЧЕН? -->
+        <mxCell id="11" value="Кадр&lt;br&gt;получен?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="205" y="800" width="130" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- НОВЫЙ ШК ПОКА НЕТ КАДРА -->
+        <mxCell id="12" value="Появился&lt;br&gt;новый ШК?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="490" y="800" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- SET NEXT BARCODE 1 -->
+        <mxCell id="13" value="next_barcode = new" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="690" y="815" width="150" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- OCR -->
+        <mxCell id="14" value="&lt;b&gt;PaddleOCR&lt;/b&gt;&lt;br&gt;Распознавание + в буфер" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="195" y="920" width="150" height="50" as="geometry" />
+        </mxCell>
+        
+        <!-- НАЙДЕНЫ СЛОВА? -->
+        <mxCell id="15" value="Целевые слова&lt;br&gt;найдены?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="195" y="1010" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- УСПЕХ -->
+        <mxCell id="16" value="&lt;b&gt;УСПЕХ:&lt;/b&gt;&lt;br&gt;Записать в Modbus панель&lt;br&gt;Сохранить good_video&lt;br&gt;Остановить поток камеры" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1015" width="230" height="70" as="geometry" />
+        </mxCell>
+        
+        <!-- НОВЫЙ ШК ПОСЛЕ OCR -->
+        <mxCell id="17" value="Появился&lt;br&gt;новый ШК?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="195" y="1130" width="150" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- SET NEXT BARCODE 2 -->
+        <mxCell id="18" value="next_barcode = new" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1145" width="150" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ============ СТРЕЛКИ (EDGES) ============ -->
+        
+        <mxCell id="20" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="2" target="3" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="21" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="3" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="22" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="4" target="5" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Да -> Сохранить ошибку -->
+        <mxCell id="23" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="5" target="6" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Ошибка -> Возврат в Ожидание -->
+        <mxCell id="24" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" source="6" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="600" y="275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Нет -> Проверка нового ШК -->
+        <mxCell id="25" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="5" target="7" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Да -> Настройка сессии -->
+        <mxCell id="26" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="7" target="8" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Настройка -> Поток камеры -->
+        <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.75;entryY=0;" edge="1" source="8" target="9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Нет -> Поток камеры -->
+        <mxCell id="28" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.25;entryY=0;" edge="1" source="7" target="9" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="29" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="9" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="30" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="10" target="11" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Да -> OCR -->
+        <mxCell id="31" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="11" target="14" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Нет -> Проверка нового ШК -->
+        <mxCell id="32" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="11" target="12" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Новый ШК (Да 1) -> next_barcode -->
+        <mxCell id="33" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="12" target="13" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- next_barcode (1) -> Ожидание (Большая петля) -->
+        <mxCell id="34" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" source="13" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="765" y="275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Нет (1) -> Возврат к Получить кадр -->
+        <mxCell id="35" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" source="12" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="550" y="735" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="36" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="14" target="15" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Да -> Успех -->
+        <mxCell id="37" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="15" target="16" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Успех -> Ожидание (Большая петля) -->
+        <mxCell id="38" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" source="16" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="585" y="275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Нет -> Проверка нового ШК 2 -->
+        <mxCell id="39" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" source="15" target="17" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- Да 2 -> next_barcode 2 -->
+        <mxCell id="40" value="Да" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="17" target="18" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- next_barcode (2) -> Ожидание (Большая петля) -->
+        <mxCell id="41" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" source="18" target="4" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="545" y="275" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Нет 2 -> Возврат к Получить кадр -->
+        <mxCell id="42" value="Нет" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" source="17" target="10" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="1170" />
+              <mxPoint x="80" y="735" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
